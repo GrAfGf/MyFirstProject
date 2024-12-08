@@ -1,0 +1,36 @@
+class Computer:
+    computer_count = 0
+
+    def __init__(self, cpu, ram, storage):
+        self.cpu = cpu
+        self.ram = ram
+        self.storage = storage
+        Computer.computer_count += 1
+        self.id = f"PC_{Computer.computer_count}"
+        setattr(self, f"comp_{Computer.computer_count}", self.id)
+
+    def __str__(self):
+        return f"Computer {self.id}: CPU: {self.cpu}, RAM: {self.ram}GB, Storage: {self.storage}GB"
+
+    def __lt__(self, other):
+        return self.ram < other.ram
+
+    def __eq__(self, other):
+        return self.ram == other.ram and self.storage == other.storage
+
+    def __mul__(self, value):
+        return Computer(self.cpu, self.ram * value, self.storage * value)
+
+    def __rmul__(self, value):
+        return self.__mul__(value)
+
+    def __getitem__(self, index):
+        specs = [self.cpu, self.ram, self.storage, self.id]
+        return specs[index]
+
+    def __bool__(self):
+        return self.ram > 0 and self.storage > 0
+
+    def __del__(self):
+        Computer.computer_count -= 1
+        print(f"Computer {self.id} has been deleted. Remaining computers: {Computer.computer_count}"
