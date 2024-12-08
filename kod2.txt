@@ -1,0 +1,48 @@
+class Computer:
+    computer_count = 0
+
+    def __init__(self, cpu, ram, storage,gpu, gpu_name):
+        self.cpu = cpu
+        self.ram = ram
+        self.storage = storage
+        self.gpu = gpu
+        self.gpu_name = gpu_name
+        Computer.computer_count += 1
+        self.id = f"PC_{Computer.computer_count}"
+        setattr(self, f"comp_{Computer.computer_count}", self.id)
+
+    def __str__(self):
+        return (f"Computer ID: {self.id}, CPU: {self.cpu}, RAM: {self.ram}GB, "
+                f"Storage: {self.storage}GB, GPU: {self.gpu}, GPU_Name: {self.gpu_name}")
+
+    def __lt__(self, other):
+        return (self.ram + self.gpu) < (other.ram + other.gpu)
+
+    def __eq__(self, other):
+        return self.ram == other.ram and self.storage == other.storage
+
+    def __mul__(self, value):
+        return Computer(self.cpu, self.ram * value, self.storage * value)
+
+    def __rmul__(self, value):
+        return self.mul(value)
+
+    def __getitem__(self, index):
+        specs = [self.cpu, self.ram, self.storage, self.id]
+        return specs[index]
+
+    def __bool__(self):
+        return self.ram > 0 and self.storage > 0
+    def upgrade_ram(self, additional_ram):
+        self.ram += additional_ram
+        print(f"{self.id} RAM увеличено на {additional_ram}GB. Новое значение RAM: {self.ram}GB.")
+    def __add__(self,other):
+        new_cpu = f"{self.cpu} + {other.cpu}"
+        new_ram = self.ram + other.ram
+        new_storage = self.storage + other.storage
+        new_gpu = self.gpu + other.gpu
+        new_gpu_name = f"{self.gpu_name} and {other.gpu_name}"
+        return Computer(new_cpu, new_ram, new_storage, new_gpu, new_gpu_name)
+    def __del__(self):
+        Computer.computer_count -= 1
+        print(f"Computer {self.id} has been deleted. Remaining computers: {Computer.computer_count}")
